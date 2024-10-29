@@ -4,7 +4,7 @@
 """
 
 import os
-os.chdir('./SRE-master')
+os.chdir('./SRE-main')
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
