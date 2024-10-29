@@ -4,7 +4,7 @@
     
 import datetime
 import os
-os.chdir('/SRE-master')
+os.chdir('/SRE-main')
 
 import numpy as np
 import torch
