@@ -35,14 +35,24 @@ EPOCHES = 300
 train_steps = int(sample_prox_train/BATCHSIZE)
 valid_steps = int(sample_prox_val/BATCHSIZE)
 
+"""
+Identification of Tumor Cell Clusters in Histopathology Images Using a Deep Learning Model with Scale Rate Encoding
+specifically telangiectatic osteosarcoma (malignant) and aneurysmal bone cysts (benign).
 
-path_benign_rim = '/data/traindata/telang362_jpg/1/'
-path_ma_rim     = '/data/traindata/telang362_jpg/2/'
-path_hemo       = '/data/traindata/telang362_jpg/3/'
-path_normalb    = '/data/traindata/telang362_jpg/4/'
-path_normalt    = '/data/traindata/telang362_jpg/5/'
-path_cartilage  ='/data/traindata/telang362_jpg/6/'
+benign_rim: non-malignant tumor cell clusters
+ma_rim:     malignant tumor cell clusters
+hemo:       blood-filled cystic spaces
+normalb:    normal bone
+normalt:    normal tissue
+cartilage:  cartilage
 
+"""
+path_benign_rim_small = '/dataset/benign_rim/'
+path_ma_rim_small     = '/dataset/ma_rim/'
+path_hemo_small       = '/dataset/hemo/'
+path_normalb_small    = '/dataset/normalb/'
+path_normalt_small    = '/dataset/normalt/'
+path_cartilage_small  = '/dataset/cartilage/'
 
 benign_rim_path = glob.glob(path_benign_rim + '*.jpeg')
 ma_rim_path     = glob.glob(path_ma_rim + '*.jpeg')
