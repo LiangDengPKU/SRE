@@ -5,9 +5,8 @@
 
 import tensorflow as tf
 
-def cell_DenseNet169(N_CLASSES, HEIGHT, WIDTH):
-
-    baseModel = tf.keras.applications.DenseNet169(
+def cell_DenseNet161(N_CLASSES, HEIGHT, WIDTH):
+    baseModel = tf.keras.applications.DenseNet161(
         weights="imagenet",
         include_top=False,
         input_shape=(HEIGHT, WIDTH, 3)
