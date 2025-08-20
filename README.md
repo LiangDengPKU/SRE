@@ -30,8 +30,6 @@ This project implements **Scale Rate Encoding** using two backbone architectures
 - **Darknet** (used in YOLO series)
 - **Swin Transformer**
 
-A synthetic dataset is constructed for pathology imaging applications to train and evaluate the models effectively.
-
 ---
 
 ## Dataset
@@ -42,7 +40,7 @@ A synthetic dataset is constructed for pathology imaging applications to train a
   - Varied staining, noise, and resolution levels.
   - Augmented with scale variations to test scale-encoding robustness.
   - Annotated patches for classification or detection tasks.
-- **Rationale**: No suitable public original dataset available; synthetic data ensures controlled evaluation.
+- **Original Dataset**: The original dataset is not applicable, necessitating the creation of a synthetic alternative.
 
 ---
 
@@ -50,14 +48,11 @@ A synthetic dataset is constructed for pathology imaging applications to train a
 
 ### 1. Darknet (YOLO)
 - **Official GitHub Repository**:  
-  [https://github.com/pjreddie/darknet](https://github.com/pjreddie/darknet)
 - **YOLO Pretrained Weights**:  
-  [https://pjreddie.com/darknet/yolo/](https://pjreddie.com/darknet/yolo/)
   - Includes weights for YOLOv3, YOLOv4, etc., trained on ImageNet and COCO.
 
 ### 2. Swin Transformer
 - **Official GitHub Repository**:  
-  [https://github.com/microsoft/Swin-Transformer](https://github.com/microsoft/Swin-Transformer)
 - **Pretrained Models**:
   - Check the `README.md` for links to models trained on ImageNet.
   - Supports variants: Swin-Tiny, Swin-Small, Swin-Base, Swin-Large.
