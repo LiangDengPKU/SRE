@@ -19,7 +19,7 @@ Pretrained Weights for Backbone:
   4. Baidu Netdisk: 
   https://pan.baidu.com/s/1D3u-itxpMh9cuo86NchTXg Extracted code: k9jc
 
-Run train_resnet_gmp.py to benchmark the ResNet/DenseNet architecture enhanced with Global Maximum Pooling.     
+Run train_resnet_gmp.py to benchmark the ResNet/DenseNet architecture enhanced with Global Maximum Pooling, including:       
   resnet152 + GMP: network_res_max.py  
   densenet161 + GMP: denseNet_max.py  
      
