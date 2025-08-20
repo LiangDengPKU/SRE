@@ -32,7 +32,7 @@ This project implements **Scale Rate Encoding** using two backbone architectures
   - Check the `README.md` for links to models trained on ImageNet.
   - Supports variants: Swin-Tiny, Swin-Small, Swin-Base, Swin-Large.
 
-### 3. Baidu Netdisk (China-friendly access)
+### 3. Baidu Netdisk
 - **Link**: [https://pan.baidu.com/s/1D3u-itxpMh9cuo86NchTXg](https://pan.baidu.com/s/1D3u-itxpMh9cuo86NchTXg)
 - **Extraction Code**: `k9jc`
 
