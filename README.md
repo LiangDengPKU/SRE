@@ -14,7 +14,7 @@ Pretrained Weights for Darknet Backbone: You can download pretrained weights for
   Access the YOLO Weights Page for various versions of YOLO, which utilize Darknet.
 
   3. Run train_resnet_gmp.py to benchmark the ResNet/DenseNet architecture enhanced with Global Maximum Pooling.     
-     resnet152 + GMP: network_res_max.py.
+     resnet152 + GMP: network_res_max.py.\n
      densenet161 + GMP: denseNet_max.py.
      
   5. Baidu Netdisk: 
