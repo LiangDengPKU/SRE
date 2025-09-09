@@ -46,7 +46,6 @@ class DarkNet(nn.Module):
         self.conv3_for_downsample2  = C3(base_channels * 16, base_channels * 16, base_depth, shortcut=False)
         self.linear = nn.Sequential(
                                         nn.Flatten(),
-                                        nn.Dropout(0.5),
                                         nn.Linear(896,  1024),
                                         nn.ReLU(),
                                         nn.Dropout(0.2),
