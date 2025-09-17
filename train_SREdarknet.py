@@ -93,8 +93,9 @@ if __name__ == "__main__":
     #------------------------------------------------------#  
     #input_shape
     #------------------------------------------------------#
-    ORIGINIAL_DIMAENTION = 256
+    ORIGINIAL_DIMENSION = 256
     input_shape = [640,640]
+    one_cell_fov=64
     #------------------------------------------------------#
     #------------------------------------------------------#
     backbone        = 'cspdarknet'
@@ -275,7 +276,7 @@ if __name__ == "__main__":
         
             # 每个 epoch 随机生成 scale_rate
             np.random.seed(epoch + int(time.time()))
-            scale_rate = np.random.choice(np.arange(64, 256), 1)[0]
+            scale_rate = np.random.choice(np.arange(one_cell_fov, ORIGINIAL_DIMENSION), 1)[0]
             print(f"Epoch {epoch}: scale_rate = {scale_rate}")
 
             train_gen = data_gen_jpg_sre(train_benign_rim_jpg,train_ma_rim_jpg,train_hemo_jpg,train_bg_jpg,scale_rate,batch_size)
@@ -294,3 +295,4 @@ if __name__ == "__main__":
 
         if local_rank == 0:
             loss_history.writer.close()
+
