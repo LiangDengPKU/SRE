@@ -3,13 +3,15 @@ import torch
 from tqdm import tqdm
 from utils.utils import get_lr
         
-def fit_one_epoch(model_train, model, ema, criterion, loss_history, optimizer, epoch, epoch_step, epoch_step_val, train_gen, val_gen, Epoch, cuda, fp16, scaler, save_period, save_dir, local_rank=0):
+def fit_one_epoch(model_train, model, ema, criterion, loss_history, optimizer,
+                  epoch, epoch_step, epoch_step_val, train_gen, val_gen, Epoch, cuda, 
+                  fp16, scaler, save_period, save_dir, local_rank=0, scale_rate=None):
     loss        = 0
     val_loss    = 0
 
     if local_rank == 0:
         print('Start Train')
-        pbar = tqdm(total=epoch_step,desc=f'Epoch {epoch + 1}/{Epoch}',postfix=dict,mininterval=0.3,position=0)
+        pbar = tqdm(total=epoch_step,desc=f'Epoch {epoch + 1}/{Epoch}',postfix=dict,mininterval=0.3,ncols=85)
     model_train.train()
     for iteration, batch in enumerate(train_gen):
         if iteration >= epoch_step:
@@ -18,28 +20,17 @@ def fit_one_epoch(model_train, model, ema, criterion, loss_history, optimizer, e
         images, targets = batch[0], batch[1]
         with torch.no_grad():
             if cuda:
-                images = torch.Tensor(images)
-
+                images = torch.tensor(images)
                 images  = images.cuda(local_rank)
-
-
-        device = torch.device('cuda:0')        
-
-        ground_truth = torch.Tensor(targets).to(device)
+     
+        device = torch.device(f'cuda:{local_rank}' if cuda else 'cpu')
+        ground_truth = torch.tensor(targets).to(device)
         ground_truth = ground_truth.long().to(device)
         
         optimizer.zero_grad()
 
-        #----------------------#
-        #   forward
-        #----------------------#
-        outputs         = model_train(images)
-
+        outputs         = model_train(images, scale_rate=scale_rate)
         loss_value = criterion(outputs, ground_truth)
-
-        #----------------------#
-        #   backward
-        #----------------------#
         loss_value.backward()
         optimizer.step()
 
@@ -57,7 +48,7 @@ def fit_one_epoch(model_train, model, ema, criterion, loss_history, optimizer, e
         pbar.close()
         print('Finish Train')
         print('Start Validation')
-        pbar = tqdm(total=epoch_step_val, desc=f'Epoch {epoch + 1}/{Epoch}',postfix=dict,mininterval=0.3,position=0)
+        pbar = tqdm(total=epoch_step_val, desc=f'Epoch {epoch + 1}/{Epoch}',postfix=dict,mininterval=0.3,ncols=85)
 
     if ema:
         model_train_eval = ema.ema
@@ -70,23 +61,14 @@ def fit_one_epoch(model_train, model, ema, criterion, loss_history, optimizer, e
         images, targets = batch[0], batch[1]
         with torch.no_grad():
             if cuda:
-                images = torch.Tensor(images)
+                images = torch.tensor(images)
                 images  = images.cuda(local_rank)
-
-            #----------------------#
-            #----------------------#
             optimizer.zero_grad()
-            #----------------------#
-            #   forward
-            #----------------------#
             outputs         = model_train_eval(images)
-            device = torch.device('cuda:0')        
-
-            ground_truth = torch.Tensor(targets).to(device)
+            device = torch.device(f'cuda:{local_rank}' if cuda else 'cpu')     
+            ground_truth = torch.tensor(targets).to(device)
             ground_truth = ground_truth.long().to(device)
-
             loss_value = criterion(outputs, ground_truth)
-
         val_loss += loss_value.item()
         if local_rank == 0:
             pbar.set_postfix(**{'val_loss': val_loss / (iteration + 1)})
@@ -95,14 +77,9 @@ def fit_one_epoch(model_train, model, ema, criterion, loss_history, optimizer, e
     if local_rank == 0:
         pbar.close()
         print('Finish Validation')
-        loss_history.append_loss(epoch + 1, loss / epoch_step, val_loss / epoch_step_val)
-        
+        loss_history.append_loss(epoch + 1, loss / epoch_step, val_loss / epoch_step_val)        
         print('Epoch:'+ str(epoch + 1) + '/' + str(Epoch))
-        print('Total Loss: %.3f || Val Loss: %.3f ' % (loss / epoch_step, val_loss / epoch_step_val))
-        
-        #-----------------------------------------------#
-        #   save
-        #-----------------------------------------------#
+        print('Total Loss: %.3f || Val Loss: %.3f ' % (loss / epoch_step, val_loss / epoch_step_val))        
         if ema:
             save_state_dict = ema.ema.state_dict()
         else:
@@ -113,6 +90,5 @@ def fit_one_epoch(model_train, model, ema, criterion, loss_history, optimizer, e
             
         if len(loss_history.val_loss) <= 1 or (val_loss / epoch_step_val) <= min(loss_history.val_loss):
             print('Save best model to best_epoch_weights.pth')
-            torch.save(save_state_dict, os.path.join(save_dir, "best_epoch_weights.pth"))
-            
+            torch.save(save_state_dict, os.path.join(save_dir, "best_epoch_weights.pth"))            
         torch.save(save_state_dict, os.path.join(save_dir, "last_epoch_weights.pth"))
