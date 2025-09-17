@@ -4,7 +4,7 @@
 """
 
 import os
-os.chdir('./SRE-main')
+os.chdir('/media/mediway/Work2/deep3/SRE-master2')
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
@@ -14,7 +14,7 @@ from skimage.filters import threshold_otsu
 from openslide.deepzoom import DeepZoomGenerator
 import pandas as pd
 import time
-from SREdarknet import DarkNet
+from SREdarknet import SREDarkNet
 import torch
 import torch.nn as nn
 
@@ -23,13 +23,14 @@ Identification of Tumor Cell Clusters in Histopathology Images Using a Deep Lear
 specifically telangiectatic osteosarcoma (malignant) and aneurysmal bone cysts (benign).
 """
 
-PATH='./whole_silde/14_05_13.svs'
+PATH = '/media/mediway/Work2/bone_data/12_18_59.svs'
+#PATH='./whole_silde/14_05_13.svs'
 WIDTH = 256
 HEIGHT = 256
 N_CLASSES = 3
 BATCHSIZE = 8
-model_path = "./logs/ep300-loss0.024-val_loss0.040.pth"
-model_t = DarkNet(3, "s")
+model_path = "/media/mediway/Work2/deep3/SRE-master2/logs/ep270-loss0.148-val_loss0.069.pth"
+model_t = SREDarkNet(3, "s")
 device      = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model_t.load_state_dict(torch.load(model_path, map_location=device))
 cuda = True
@@ -45,7 +46,7 @@ def linear_normalize(img_):
 def minmax_normalize(img_):
     img_mn = cv2.normalize(img_, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
     return img_mn 
-    
+
 def find_tissue_patches(slide_path_):
     with openslide.open_slide(slide_path_) as slide:
         thumbnail = slide.get_thumbnail((slide.dimensions[0] / HEIGHT, slide.dimensions[1] / WIDTH))    
@@ -106,9 +107,9 @@ def bm_color_encode(mask_thumb_all2_):
     mask_thumb_all3[:,:,2] = b
     mask_thumb_all3[mask_thumb_all3==0]=255
     return mask_thumb_all3
-#####################################################################################
-#####################################################################################
 
+#####################################################################################
+#####################################################################################
 """
 normal tissue: 0
 benign: 1
@@ -121,33 +122,36 @@ def infer(all_tissue_samples_,slide_):
     start_time = time.time()    
     benign_id = []
     malignant_id = []
-
+    #bg_id = []
     N = len(all_tissue_samples_)
     tiles = DeepZoomGenerator(slide_, tile_size=HEIGHT, overlap=0, limit_bounds=False)
     for i in range(N//BATCHSIZE):  
         imgs=[]
-        for j in range(i*BATCHSIZE,i*BATCHSIZE+BATCHSIZE):                      
+        for j in range(i*BATCHSIZE,i*BATCHSIZE+BATCHSIZE):                         
             b,a=all_tissue_samples_.iat[j,1]
             img_1 =tiles.get_tile(tiles.level_count-1, (a,b))
             img_1 = np.array(img_1)
-            imgs.append(img_1)     
+            imgs.append(img_1)        
         batch_images_tf = pre_img_batch(imgs,BATCHSIZE)
         batch_images_tf = torch.Tensor(batch_images_tf)
         batch_images_tf  = batch_images_tf.cuda(0)
         pred_mask = model_t(batch_images_tf)
         pred_mask = pred_mask.cpu()
         pred_mask = pred_mask.detach().numpy()         
-        pred_mask1 = np.argmax(pred_mask,axis=1)      
+        pred_mask1 = np.argmax(pred_mask,axis=1)        
         for k in range(BATCHSIZE):        
             pred_mask2 = pred_mask1[k]
             if pred_mask2 == 1:
                 benign_id.append(i*BATCHSIZE+k)
             if pred_mask2 == 2:
-                malignant_id.append(i*BATCHSIZE+k)               
+                malignant_id.append(i*BATCHSIZE+k)
+                
         if i%100 == 0:
-            print('proceeding tiles:',i*8)        
+            print('proceeding tiles:',i*8)
+        
     ends = N%BATCHSIZE
-    N1 = N-ends       
+    N1 = N-ends
+        
     if ends != 0:
         remain_imgs = []
         for i in range(ends):
@@ -156,23 +160,25 @@ def infer(all_tissue_samples_,slide_):
             b,a = all_tissue_samples_.iat[n1,1]
             img_1 =tiles.get_tile(tiles.level_count-1, (a,b))
             img_1 = np.array(img_1)
-            remain_imgs.append(img_1)              
+            remain_imgs.append(img_1)
+               
         batch_images_tf = pre_img_batch(remain_imgs,ends)
         batch_images_tf = torch.Tensor(batch_images_tf)
         batch_images_tf  = batch_images_tf.cuda(0)
         pred_mask = model_t(batch_images_tf)
         pred_mask = pred_mask.cpu()
         pred_mask = pred_mask.detach().numpy() 
-        pred_mask1 = np.argmax(pred_mask,axis=1)   
+        pred_mask1 = np.argmax(pred_mask,axis=1)
+    
         for k in range(ends):                      
             pred_mask2 = pred_mask1[k]
             if pred_mask2 == 1:
                 benign_id.append(N1+k)
             if pred_mask2 == 2:
-                malignant_id.append(N1+k)      
+                malignant_id.append(N1+k)
+       
     end_time = time.time()
     processing_time = end_time - start_time
-    #print('Total processing time:',end_time - start_time)
     return benign_id,malignant_id,processing_time
         
 ##################################################################################################################
@@ -182,6 +188,7 @@ slide = openslide.open_slide(PATH)
 thumbnail = slide.get_thumbnail((slide.dimensions[0]/40, slide.dimensions[1]/40))
 plt.figure()
 plt.imshow(thumbnail)
+
 all_tissue_samples, binary = find_tissue_patches(PATH)
 binary = ~binary
 benign_id, malignant_id, processing_time = infer(all_tissue_samples,slide)
@@ -200,6 +207,7 @@ for i in range(len(malignant_id)):
 mask_thumb_all2 = cv2.resize(mask_thumb_all,(w,h),interpolation=cv2.INTER_NEAREST) 
 mask_thumb_all3 = bm_color_encode(mask_thumb_all2)
 masked_all = np.ma.masked_where(mask_thumb_all3 == 0, mask_thumb_all3)
+
 thumbnail = np.array(thumbnail)
 fig, ax = plt.subplots()
 ax.imshow(thumbnail)
