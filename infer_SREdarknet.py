@@ -4,7 +4,7 @@
 """
 
 import os
-os.chdir('/media/mediway/Work2/deep3/SRE-master2')
+os.chdir('./SRE-master')
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
@@ -23,13 +23,12 @@ Identification of Tumor Cell Clusters in Histopathology Images Using a Deep Lear
 specifically telangiectatic osteosarcoma (malignant) and aneurysmal bone cysts (benign).
 """
 
-PATH = '/media/mediway/Work2/bone_data/12_18_59.svs'
-#PATH='./whole_silde/14_05_13.svs'
+PATH='./whole_silde/14_05_13.svs'
 WIDTH = 256
 HEIGHT = 256
 N_CLASSES = 3
 BATCHSIZE = 8
-model_path = "/media/mediway/Work2/deep3/SRE-master2/logs/ep270-loss0.148-val_loss0.069.pth"
+model_path = "./logs/ep270-loss0.148-val_loss0.069.pth"
 model_t = SREDarkNet(3, "s")
 device      = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model_t.load_state_dict(torch.load(model_path, map_location=device))
@@ -70,7 +69,6 @@ def pre_img_batch(imgs_,n_):
 
 def get_rid_off_fp(mask_,thres_,label_,h2_,w2_):    
     all_label, num= measure.label(mask_, return_num=True, connectivity=2) 
-    #print(all_label)
     props = measure.regionprops(all_label)
     numPix = []
     index = []
