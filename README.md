@@ -44,8 +44,8 @@ Run the following script to benchmark CNN architectures enhanced with **Global M
 
 ```bash
 train_resnet_gmp.py
-resnet152 + GMP: network_res_max.py
-densenet161 + GMP: denseNet_max.py 
+resnet152 + GMP: network_resnet_gmp.py
+densenet161 + GMP: network_densenet_gmp.py 
 
   
      
