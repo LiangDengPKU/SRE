@@ -1,11 +1,10 @@
 """
 @author: Liang Deng
 """
-    
+import time    
 import datetime
 import os
-os.chdir('/SRE-main')
-
+os.chdir('./SRE-master')
 import numpy as np
 import torch
 print(torch.__version__)
@@ -13,7 +12,7 @@ import torch.backends.cudnn as cudnn
 import torch.distributed as dist
 import torch.nn as nn
 import torch.optim as optim
-from SREdarknet import DarkNet
+from SREdarknet import SREDarkNet
 from torch.nn import CrossEntropyLoss
 from nets.yolo_training import (ModelEMA, get_lr_scheduler,
                                 set_optimizer_lr, weights_init)
@@ -34,14 +33,12 @@ normalt:    normal tissue
 cartilage:  cartilage
 
 """
-path_benign_rim_small = '/dataset/benign_rim/'
-path_ma_rim_small     = '/dataset/ma_rim/'
-path_hemo_small       = '/dataset/hemo/'
-path_normalb_small    = '/dataset/normalb/'
-path_normalt_small    = '/dataset/normalt/'
-path_cartilage_small  = '/dataset/cartilage/'
-
-
+path_benign_rim_small = '/media/mediway/Work2/dataset7/telang_small/1/'
+path_ma_rim_small     = '/media/mediway/Work2/dataset7/telang_small/2/'
+path_hemo_small       = '/media/mediway/Work2/dataset7/telang_small/3/'
+path_normalb_small    = '/media/mediway/Work2/dataset7/telang_small/4/'
+path_normalt_small    = '/media/mediway/Work2/dataset7/telang_small/5/'
+path_cartilage_small  = '/media/mediway/Work2/dataset7/telang_small/6/'
 
 benign_rim_path = glob.glob(path_benign_rim_small + '*.jpeg')
 ma_rim_path     = glob.glob(path_ma_rim_small + '*.jpeg')
@@ -86,38 +83,19 @@ print("loading val_bg")
 val_bg_jpg         = contruct_jpg(val_bg)
 
 if __name__ == "__main__":
-    #---------------------------------#
-    #---------------------------------#
     Cuda            = True
-    #---------------------------------#
-    #---------------------------------#
-
-    #---------------------------------#
-    #   DP：
-    #       distributed = False
-    #       CUDA_VISIBLE_DEVICES=0,1 python train.py
-    #   DDP：
-    #       distributed = True
-    #       CUDA_VISIBLE_DEVICES=0,1 python -m torch.distributed.launch --nproc_per_node=2 train.py
-    #---------------------------------------------------------------------#
     distributed     = False
-    #---------------------------------------------------------------------#
-    #   sync_bn     DDP mode
-    #---------------------------------------------------------------------#
     sync_bn         = False
-    #---------------------------------------------------------------------#
-    #   fp16        > pytorch1.7.1
-    #---------------------------------------------------------------------#
     fp16            = False
     #----------------------------------------------------------------------------------------------------------------------------#
     #----------------------------------------------------------------------------------------------------------------------------#
     model_path      = 'model_data/yolov5_s.pth'
+    #------------------------------------------------------#  
+    #input_shape
     #------------------------------------------------------#
-    #   input_shape     
+    ORIGINIAL_DIMAENTION = 256
+    input_shape = [640,640]
     #------------------------------------------------------#
-    input_shape     = [256, 256]
-    #------------------------------------------------------#
-
     #------------------------------------------------------#
     backbone        = 'cspdarknet'
     #------------------------------------------------------#
@@ -128,16 +106,6 @@ if __name__ == "__main__":
     #------------------------------------------------------#
     phi             = 's'
     #------------------------------------------------------#
-    #----------------------------------------------------------------------------------------------------------------------------#
-    #       Adam：
-    #           Init_Epoch = 0，Freeze_Epoch = 50，UnFreeze_Epoch = 100，Freeze_Train = True，optimizer_type = 'adam'，Init_lr = 1e-3，weight_decay = 0
-    #           Init_Epoch = 0，UnFreeze_Epoch = 100，Freeze_Train = False，optimizer_type = 'adam'，Init_lr = 1e-3，weight_decay = 0
-    #       SGD：
-    #           Init_Epoch = 0，Freeze_Epoch = 50，UnFreeze_Epoch = 300，Freeze_Train = True，optimizer_type = 'sgd'，Init_lr = 1e-2，weight_decay = 5e-4
-    #           Init_Epoch = 0，UnFreeze_Epoch = 300，Freeze_Train = False，optimizer_type = 'sgd'，Init_lr = 1e-2，weight_decay = 5e-4
-    #----------------------------------------------------------------------------------------------------------------------------#
-    #------------------------------------------------------------------#
-    #------------------------------------------------------------------#
     Init_Epoch          = 0
     Freeze_Epoch        = 50
     Freeze_batch_size   = 16
@@ -192,10 +160,7 @@ if __name__ == "__main__":
     #------------------------------------------------------#
     #------------------------------------------------------#
     num_classes = 3
-
-    #------------------------------------------------------#
-    #------------------------------------------------------#
-    model = DarkNet(num_classes, phi)
+    model = SREDarkNet(num_classes, phi)
     
     if not pretrained:
         weights_init(model)
@@ -237,11 +202,11 @@ if __name__ == "__main__":
     
     criterion = CrossEntropyLoss()
 
-    num_train   = 100000
-    num_val     = 2000
+    num_train   = 1000
+    num_val     = 100
+
 
     if local_rank == 0:
-
         wanted_step = 5e4 if optimizer_type == "sgd" else 1.5e4
         total_step  = num_train // Unfreeze_batch_size * UnFreeze_Epoch
         if total_step <= wanted_step:
@@ -297,54 +262,32 @@ if __name__ == "__main__":
         
         if ema:
             ema.updates     = epoch_step * Init_Epoch
-           
+              
         #---------------------------------------#
         #   start training
         #---------------------------------------#
         for epoch in range(Init_Epoch, UnFreeze_Epoch):
-            #---------------------------------------#
-            #---------------------------------------#
             if epoch >= Freeze_Epoch and not UnFreeze_flag and Freeze_Train:
-                batch_size = Unfreeze_batch_size
-
-                #-------------------------------------------------------------------#
-                #   learning rate setting
-                #-------------------------------------------------------------------#
-                nbs             = 64
-                lr_limit_max    = 1e-3 if optimizer_type == 'adam' else 5e-2
-                lr_limit_min    = 3e-4 if optimizer_type == 'adam' else 5e-4
-                Init_lr_fit     = min(max(batch_size / nbs * Init_lr, lr_limit_min), lr_limit_max)
-                Min_lr_fit      = min(max(batch_size / nbs * Min_lr, lr_limit_min * 1e-2), lr_limit_max * 1e-2)
-
-                lr_scheduler_func = get_lr_scheduler(lr_decay_type, Init_lr_fit, Min_lr_fit, UnFreeze_Epoch)
-
-                for param in model.backbone.parameters():
-                    param.requires_grad = True
-
-                epoch_step      = num_train // batch_size
-                epoch_step_val  = num_val // batch_size
-
-                if epoch_step == 0 or epoch_step_val == 0:
-                    raise ValueError("Not enough data")
-                    
-                if ema:
-                    ema.updates     = epoch_step * epoch
-
-                if distributed:
-                    batch_size  = batch_size // ngpus_per_node
-
-                UnFreeze_flag   = True
-
+                # ... 解冻 backbone、调整 batch_size、调整学习率 ...
+                UnFreeze_flag = True
+        
             set_optimizer_lr(optimizer, lr_scheduler_func, epoch)
-            
-            scale_rate = np.random.choice(np.arange(64,256),1)[0] 
-            model.scale_rate = scale_rate
+        
+            # 每个 epoch 随机生成 scale_rate
+            np.random.seed(epoch + int(time.time()))
+            scale_rate = np.random.choice(np.arange(64, 256), 1)[0]
+            print(f"Epoch {epoch}: scale_rate = {scale_rate}")
+
             train_gen = data_gen_jpg_sre(train_benign_rim_jpg,train_ma_rim_jpg,train_hemo_jpg,train_bg_jpg,scale_rate,batch_size)
             val_gen = val_gen_jpg(val_benign_rim_jpg,val_ma_rim_jpg,val_hemo_jpg,val_bg_jpg,batch_size)
-            print("scale_rate:",model.scale_rate)
-            print("batchsize:",batch_size)
-
-            fit_one_epoch(model_train, model, ema, criterion, loss_history, optimizer, epoch, epoch_step, epoch_step_val, train_gen, val_gen, UnFreeze_Epoch, Cuda, fp16, scaler, save_period, save_dir, local_rank)
+        
+            # 传入 scale_rate 到训练函数
+            fit_one_epoch(
+                model_train, model, ema, criterion, loss_history, optimizer,
+                epoch, epoch_step, epoch_step_val, train_gen, val_gen,
+                UnFreeze_Epoch, Cuda, fp16, scaler, save_period, save_dir, local_rank,
+                scale_rate=scale_rate
+            )
             
             if distributed:
                 dist.barrier()
