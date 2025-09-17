@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 import torch.fft as fft
 
-ORIGINAL_DIMENSION = 640
+ORIGINAL_DIMENSION = 256
 def interpolant(t):
     return t*t*t*(t*(t*6 - 15) + 10)
 
