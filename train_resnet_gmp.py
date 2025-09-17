@@ -5,7 +5,7 @@
 
 
 import os
-import network_res_gmp
+import network_resnet_gmp
 import cv2
 import numpy as np
 import tensorflow as tf
