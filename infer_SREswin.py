@@ -29,7 +29,7 @@ HEIGHT = 256
 N_CLASSES = 3
 BATCHSIZE = 8
 INPUT_DIMENSION = 640
-model_path = "/media/mediway/Work2/deep3/SRE-master2/logs/ep300-loss0.037-val_loss0.024.pth"
+model_path = "./logs/ep300-loss0.037-val_loss0.024.pth"
 
 model_t = SreSwin(num_classes=3, pretrained=False, input_shape=[640, 640])
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
