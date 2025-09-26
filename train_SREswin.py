@@ -4,7 +4,7 @@
 import time    
 import datetime
 import os
-os.chdir('/media/mediway/Work2/deep3/SRE-master2')
+os.chdir('./SRE-master')
 import numpy as np
 import torch
 print(torch.__version__)
@@ -33,12 +33,12 @@ normalt:    normal tissue
 cartilage:  cartilage
 
 """
-path_benign_rim_small = '/media/mediway/Work2/dataset7/telang_small/1/'
-path_ma_rim_small     = '/media/mediway/Work2/dataset7/telang_small/2/'
-path_hemo_small       = '/media/mediway/Work2/dataset7/telang_small/3/'
-path_normalb_small    = '/media/mediway/Work2/dataset7/telang_small/4/'
-path_normalt_small    = '/media/mediway/Work2/dataset7/telang_small/5/'
-path_cartilage_small  = '/media/mediway/Work2/dataset7/telang_small/6/'
+path_benign_rim_small = './telang_small/1/'
+path_ma_rim_small     = './telang_small/2/'
+path_hemo_small       = './telang_small/3/'
+path_normalb_small    = './telang_small/4/'
+path_normalt_small    = './telang_small/5/'
+path_cartilage_small  = './telang_small/6/'
 
 benign_rim_path = glob.glob(path_benign_rim_small + '*.jpeg')
 ma_rim_path     = glob.glob(path_ma_rim_small + '*.jpeg')
@@ -89,8 +89,6 @@ if __name__ == "__main__":
     fp16            = False
     #----------------------------------------------------------------------------------------------------------------------------#
     #----------------------------------------------------------------------------------------------------------------------------#
-    model_path      = 'model_data/yolov5_s.pth'
-    #------------------------------------------------------#  
     #input_shape
     #------------------------------------------------------#
     ORIGINIAL_DIMENSION = 256
@@ -98,14 +96,8 @@ if __name__ == "__main__":
     one_cell_fov=64
     #------------------------------------------------------#
     #------------------------------------------------------#
-    backbone        = 'cspdarknet'
-    #------------------------------------------------------#
-    #------------------------------------------------------#
     pretrained      = True
     #------------------------------------------------------#
-    #   phi             s、m、l、x
-    #------------------------------------------------------#
-    phi             = 's'
     #------------------------------------------------------#
     Init_Epoch          = 0
     Freeze_Epoch        = 50
@@ -294,4 +286,5 @@ if __name__ == "__main__":
                 dist.barrier()
 
         if local_rank == 0:
+
             loss_history.writer.close()
