@@ -493,7 +493,7 @@ class SwinTransformer(nn.Module):
 def Swin_transformer_Tiny(pretrained=False, input_shape=[640, 640], **kwargs):
     model = SwinTransformer(input_shape, depths=[2, 2, 6, 2], **kwargs)
     if pretrained:
-        pretrained_path = '/media/mediway/Work2/deep3/SRE-master2/pretrained/swin_tiny_patch4_window7.pth' 
+        pretrained_path = './swin_tiny_patch4_window7.pth' 
         checkpoint = torch.load(pretrained_path, map_location='cpu')
         if 'model' in checkpoint:
             state_dict = checkpoint['model']
