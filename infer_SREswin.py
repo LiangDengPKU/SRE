@@ -4,7 +4,7 @@
 """
 
 import os
-os.chdir('/media/mediway/Work2/deep3/SRE-master2')
+os.chdir('./SRE-master')
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
@@ -22,8 +22,8 @@ Identification of Tumor Cell Clusters in Histopathology Images Using a Deep Lear
 specifically telangiectatic osteosarcoma (malignant) and aneurysmal bone cysts (benign).
 """
 
-PATH = '/media/mediway/Work2/bone_data/12_18_59.svs'
-#PATH='./whole_silde/14_05_13.svs'
+
+PATH='./whole_silde/14_05_13.svs'
 WIDTH = 256
 HEIGHT = 256
 N_CLASSES = 3
