@@ -33,7 +33,7 @@ This project implements **Scale Rate Encoding** using two backbone architectures
   - Supports variants: Swin-Tiny, Swin-Small, Swin-Base, Swin-Large.
 
 ### 3. Baidu Netdisk
-- **Link**: [ https://pan.baidu.com/s/1pEkNFg-Exv5Hv2wraQHIMw?pwd=mnzy)
+- **Link**: https://pan.baidu.com/s/1pEkNFg-Exv5Hv2wraQHIMw?pwd=mnzy 
 - **Extraction Code**: `mnzy`
 
 ---
