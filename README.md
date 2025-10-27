@@ -43,8 +43,8 @@ The original dataset is not publicly available. However, the method is implement
 - **Extraction Code**: `mnzy`
 
 ### 2. For quick inference test
-- **Link**: https://pan.baidu.com/s/1pEkNFg-Exv5Hv2wraQHIMw?pwd=mnzy 
-- **Extraction Code**: `mnzy`
+- **Link**: https://pan.baidu.com/s/1md_8DW8TC0eGgaNVpj7QBQ?pwd=67fb
+- **Extraction Code**: `67fb`
 
 
 
