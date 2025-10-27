@@ -31,7 +31,7 @@ python infer_resnet.py
 ---
 
 ## Dataset
-The original dataset is not publicly available. However, the method is implementable for pathology Whole Slide Images (WSIs), including but not limited to osteosarcoma, lymph node metastases, and lung cancer.
+The original dataset is not publicly available. However, the method is implementable for pathology Whole Slide Images (WSIs), including but not limited to osteosarcoma, lymph node metastases, and liver tumor.
 *   Whole Slide Images are provided in `.svs` format.
 *   These WSIs are sliced into smaller patches in `.jpg` format for model training and inference.
 
