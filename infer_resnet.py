@@ -154,7 +154,7 @@ def bm_color_encode(mask_thumb_all2_):
 
 
 def infer(all_tissue_samples_,slide_):
-    model_name = '/media/mediway/Work2/logs/51700res_telang.h5'
+    model_name = '/logs/51700res_telang.h5'
     model_t = tf.keras.models.load_model(model_name)   
     start_time = time.time()    
     benign_id = []
@@ -267,8 +267,8 @@ def process_file(input_file_path):
     elif bm_rating == "benign!" :
         output_txt = 'benign，aneurysmal bone cyst.'
     
-    heatmap_path = '/media/mediway/Work2/github/results/heatmap.jpg' 
-    slide_path = '/media/mediway/Work2/github/results/slide.jpg' 
+    heatmap_path = '/results/heatmap.jpg' 
+    slide_path = '/results/slide.jpg' 
 
     fig, ax = plt.subplots(figsize=(64,48))
     ax.imshow(thumbnail)
@@ -285,7 +285,7 @@ def process_file(input_file_path):
     #plt.close('all')
     return heatmap_path, slide_path, output_txt
 
-file_path = "/media/mediway/Work2/github/10_26_37.svs"   
+file_path = "/10_26_37.svs"   
 if __name__ == "__main__":
     heatmap_img, slide_img, output_txt = process_file(file_path)
     print(output_txt)
