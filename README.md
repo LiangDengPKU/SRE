@@ -1,19 +1,22 @@
 # Scale Rate Encoding Implementation in Darknet & Swin Transformer
 
 ## Overview
-This project implements **Scale Rate Encoding** using two backbone architectures:
+This project implements **Scale Rate Encoding (SRE)** using two backbone architectures:
 - **Darknet** (used in YOLO series)
 - **Swin Transformer**
 
-1.  **Inference by CSPdarknet+SRE for one slide(.svs) **：
+## Usage
+
+### 1. Inference with CSPDarknet + SRE
+Run inference on a whole-slide image (.svs) using the CSPDarknet backbone with Scale Rate Encoding.
+```bash
+python infer_SREDarknet.py
+```
+### 2.  **Inference by Swin Transformer+SRE for one slide(.svs) **：
     ```bash
-    python infer_SREDarknet.py
+    python infer_SREswin.py
     ```
-2.  **Inference by Swin Transformer+SRE for one slide(.svs) **：
-    ```bash
-    python infer_SREDarknet.py
-    ```
-3.  **Inference by resnet for one slide(.svs) **：
+### 3.  **Inference by resnet for one slide(.svs) **：
     ```bash
     python infer_resnet.py
     ```    
