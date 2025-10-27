@@ -12,14 +12,18 @@ Run inference on a whole-slide image (.svs) using the CSPDarknet backbone with S
 ```bash
 python infer_SREDarknet.py
 ```
-### 2.  **Inference by Swin Transformer+SRE for one slide(.svs) **：
+
+### 2. Inference with Swin Transformer + SRE
+Run inference on a whole-slide image (.svs) using the Swin Transformer backbone with Scale Rate Encoding.
 ```bash
-    python infer_SREswin.py
+python infer_SREswin.py
 ```
-### 3.  **Inference by resnet for one slide(.svs) **：
+
+### 3. Inference with ResNet (Baseline)
+Run inference on a whole-slide image (.svs) using the standard ResNet backbone for comparison.
 ```bash
-    python infer_resnet.py
-```    
+python infer_resnet.py
+```
 
 ---
 ![heatmap](./results/heatmap.jpg)
