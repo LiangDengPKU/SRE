@@ -6,6 +6,12 @@ This project implements **Scale Rate Encoding** using two backbone architectures
 - **Swin Transformer**
 
 ---
+1.  **Inference by CSPdarknet+SRE for one slide(.svs) **：
+    ```bash
+    python infer_SREDarknet.py
+    ```
+
+
 ![heatmap](./results/heatmap.jpg)
 
 ## Dataset
