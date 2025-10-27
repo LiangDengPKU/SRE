@@ -5,13 +5,20 @@ This project implements **Scale Rate Encoding** using two backbone architectures
 - **Darknet** (used in YOLO series)
 - **Swin Transformer**
 
----
 1.  **Inference by CSPdarknet+SRE for one slide(.svs) **：
     ```bash
     python infer_SREDarknet.py
     ```
+2.  **Inference by Swin Transformer+SRE for one slide(.svs) **：
+    ```bash
+    python infer_SREDarknet.py
+    ```
+3.  **Inference by resnet for one slide(.svs) **：
+    ```bash
+    python infer_resnet.py
+    ```    
 
-
+---
 ![heatmap](./results/heatmap.jpg)
 
 ## Dataset
