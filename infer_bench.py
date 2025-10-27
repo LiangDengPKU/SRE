@@ -28,8 +28,8 @@ def remove_extension(path):
     filename, ext = os.path.splitext(filename_with_ext)
     return filename
 
-os.makedirs('/RESUT',exist_ok=True)
-savepath = '/RESUT/'
+os.makedirs('/results',exist_ok=True)
+savepath = '/results/'
 
 WIDTH = 256
 HEIGHT = 256
