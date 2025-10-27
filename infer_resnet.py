@@ -96,8 +96,7 @@ def malignant_encode(mask_,w_,h_,probabilities_map):
     a1 = np.shape(a[0])[0]
     for i in range(a1):
         probabilities1 = probabilities_map[a[0][i],a[1][i]]
-        ix2 = np.random.choice(np.arange(2,probabilities1*20), 1)
-        mask_[a[0][i],a[1][i]]=ix2[0]
+        mask_[a[0][i],a[1][i]]=probabilities1*20
     mask_ = gaussian_filter(mask_,1)
     mask_thumb2 = cv2.resize(mask_,(w_,h_),interpolation=cv2.INTER_CUBIC) 
     mask_thumb2[mask_thumb2 < 1] = 0    
@@ -108,8 +107,7 @@ def benign_encode(mask_,w_,h_,probabilities_map):
     a1 = np.shape(a[0])[0]
     for i in range(a1):
         probabilities1 = probabilities_map[a[0][i],a[1][i]]
-        ix2 = np.random.choice(np.arange(2,probabilities1*20), 1)
-        mask_[a[0][i],a[1][i]]=ix2[0]
+        mask_[a[0][i],a[1][i]]=probabilities1*20
     mask_ = gaussian_filter(mask_,1)
     mask_thumb2 = cv2.resize(mask_,(w_,h_),interpolation=cv2.INTER_CUBIC) 
     mask_thumb2[mask_thumb2 < 1] = 0    
