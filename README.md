@@ -27,7 +27,7 @@ python infer_resnet.py
 
 ---
 ![heatmap](./results/heatmap.jpg)
----
+
 ## Dataset
 The original dataset is not publicly available. However, the method is implementable for pathology Whole Slide Images (WSIs), including but not limited to osteosarcoma, lymph node metastases, and lung cancer.
 *   Whole Slide Images are provided in `.svs` format.
