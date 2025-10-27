@@ -6,7 +6,7 @@ This project implements **Scale Rate Encoding** using two backbone architectures
 - **Swin Transformer**
 
 ---
-![热力图分析](./SRE/results/heatmap.jpg)
+![heatmap](./results/heatmap.jpg)
 
 ## Dataset
 
