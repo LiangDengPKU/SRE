@@ -25,8 +25,10 @@ Run inference on a whole-slide image (.svs) using the standard ResNet backbone f
 python infer_resnet.py
 ```
 
----
+
 ![heatmap](./results/heatmap.jpg)
+
+---
 
 ## Dataset
 The original dataset is not publicly available. However, the method is implementable for pathology Whole Slide Images (WSIs), including but not limited to osteosarcoma, lymph node metastases, and lung cancer.
