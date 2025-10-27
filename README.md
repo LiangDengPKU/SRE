@@ -27,46 +27,25 @@ python infer_resnet.py
 
 ---
 ![heatmap](./results/heatmap.jpg)
-
+---
 ## Dataset
-
-### Synthetic Dataset Construction
-- **Purpose**: Simulate realistic medical imaging conditions in pathology.
-- **Features**:
-  - Varied staining, noise, and resolution levels.
-  - Augmented with scale variations to test scale-encoding robustness.
-  - Annotated patches for classification or detection tasks.
-- **Original Dataset**: The original dataset is not applicable, necessitating the creation of a synthetic alternative.
+The original dataset is not publicly available. However, the method is implementable for pathology Whole Slide Images (WSIs), including but not limited to osteosarcoma, lymph node metastases, and lung cancer.
+*   Whole Slide Images are provided in `.svs` format.
+*   These WSIs are sliced into smaller patches in `.jpg` format for model training and inference.
 
 ---
 
-## Pretrained Weights for Backbone Networks
+## Pretrained Weights (updating)
 
-### 1. Darknet (YOLO)
-- **Official GitHub Repository**:  
-- **YOLO Pretrained Weights**:  
-  - Includes weights for YOLOv3, YOLOv4, etc., trained on ImageNet and COCO.
-
-### 2. Swin Transformer
-- **Official GitHub Repository**:  
-- **Pretrained Models**:
-  - Check the `README.md` for links to models trained on ImageNet.
-  - Supports variants: Swin-Tiny, Swin-Small, Swin-Base, Swin-Large.
-
-### 3. Baidu Netdisk
+### 1. For Backbone Networks
 - **Link**: https://pan.baidu.com/s/1pEkNFg-Exv5Hv2wraQHIMw?pwd=mnzy 
 - **Extraction Code**: `mnzy`
 
----
+### 2. For quick inference test
+- **Link**: https://pan.baidu.com/s/1pEkNFg-Exv5Hv2wraQHIMw?pwd=mnzy 
+- **Extraction Code**: `mnzy`
 
-## Benchmarking ResNet/DenseNet with Global Maximum Pooling (GMP)
 
-Run the following script to benchmark CNN architectures enhanced with **Global Maximum Pooling**:
-
-```bash
-train_resnet_gmp.py
-resnet152 + GMP: network_resnet_gmp.py
-densenet161 + GMP: network_densenet_gmp.py 
 
   
      
