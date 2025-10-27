@@ -35,7 +35,6 @@ The original dataset is not publicly available. However, the method is implement
 *   Whole Slide Images are provided in `.svs` format.
 *   These WSIs are sliced into smaller patches in `.jpg` format for model training and inference.
 
----
 
 ## Pretrained Weights (updating)
 
