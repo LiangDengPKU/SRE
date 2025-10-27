@@ -29,7 +29,7 @@ def remove_extension(path):
     return filename
 
 os.makedirs('/RESUT',exist_ok=True)
-savepath = '/RESUT4/'
+savepath = '/RESUT/'
 
 WIDTH = 256
 HEIGHT = 256
@@ -68,7 +68,7 @@ def pre_img_batch(imgs_,n_):
     batch_images_tf_ = np.array(batch_images_tf_,dtype=np.float32)
     return batch_images_tf_
 
-model_name = '/.h5'
+model_name = '/logs/51700res_telang.h5'
 model_t = tf.keras.models.load_model(model_name)
 
 def get_rid_off_fp(mask_,thres_,label_,h2_,w2_):    
@@ -107,29 +107,33 @@ def neg_pos(all_tissue_samples_,mask1_,mask2_):
         rating="Positive slide!"
     rate2 = 1-rate
     return rate2,rating
+"""
+pseudo color for speed
+"""
 
-def malignant_encode(mask_,w_,h_,logits):
+def malignant_encode(mask_,w_,h_):
     a = np.where(mask_)    
     a1 = np.shape(a[0])[0]
     for i in range(a1):
-        ix2 = np.random.choice(np.arange(2,logits), 1)
+        ix2 = np.random.choice(np.arange(2,20), 1)
         mask_[a[0][i],a[1][i]]=ix2[0]
     mask_ = gaussian_filter(mask_,1)
     mask_thumb2 = cv2.resize(mask_,(w_,h_),interpolation=cv2.INTER_CUBIC) 
     mask_thumb2[mask_thumb2 < 1] = 0    
     return mask_thumb2
 
-def benign_encode(mask_,w_,h_,logits):
+def benign_encode(mask_,w_,h_):
     a = np.where(mask_)
     a1 = np.shape(a[0])[0]
     for i in range(a1):
-        ix2 = np.random.choice(np.arange(2,logits), 1)
+        ix2 = np.random.choice(np.arange(2,20), 1)
         mask_[a[0][i],a[1][i]]=ix2[0]
+
     mask_ = gaussian_filter(mask_,1)
     mask_thumb2 = cv2.resize(mask_,(w_,h_),interpolation=cv2.INTER_CUBIC) 
     mask_thumb2[mask_thumb2 < 1] = 0    
     return mask_thumb2
-
+    
 def bn_malg(benign_id_,malignant_id_):
     a = np.where(benign_id_)
     na = np.shape(a[0])[0]
