@@ -33,12 +33,12 @@ normalt:    normal tissue
 cartilage:  cartilage
 
 """
-path_benign_rim_small = './telang_small/1/'
-path_ma_rim_small     = './telang_small/2/'
-path_hemo_small       = './telang_small/3/'
-path_normalb_small    = './telang_small/4/'
-path_normalt_small    = './telang_small/5/'
-path_cartilage_small  = './telang_small/6/'
+path_benign_rim_small = './dataset/1/'
+path_ma_rim_small     = './dataset/2/'
+path_hemo_small       = './dataset/3/'
+path_normalb_small    = './dataset/4/'
+path_normalt_small    = './dataset/5/'
+path_cartilage_small  = './dataset/6/'
 
 benign_rim_path = glob.glob(path_benign_rim_small + '*.jpeg')
 ma_rim_path     = glob.glob(path_ma_rim_small + '*.jpeg')
@@ -288,3 +288,4 @@ if __name__ == "__main__":
         if local_rank == 0:
 
             loss_history.writer.close()
+
