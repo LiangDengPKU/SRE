@@ -24,7 +24,7 @@ Run inference on a whole-slide image (.svs) using the standard ResNet backbone f
 ```bash
 python infer_resnet.py
 ```
-### 4. Train with Inference with Swin Transformer + SRE +focal loss
+### 4. Train with Swin Transformer + SRE +focal loss
 ```bash
 python train_SREswin_focal.py
 ```
